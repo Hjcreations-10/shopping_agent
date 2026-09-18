@@ -1,0 +1,6 @@
+{
+  "name": "ShopPilot — AI Everyday Shopping Agent",
+  "description": "AI Everyday Shopping Agent with intelligent planning, RAG knowledge retrieval, review intelligence, and budget-optimized basket recommendations.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
