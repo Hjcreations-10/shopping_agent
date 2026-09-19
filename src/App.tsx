@@ -37,6 +37,7 @@ import { ArchitectureModal } from './components/ArchitectureModal';
 import { PriceAlertModal } from './components/PriceAlertModal';
 import { PriceAlertsDrawer } from './components/PriceAlertsDrawer';
 import { ClothAgentVisualizerModal } from './components/ClothAgentVisualizerModal';
+import { ElectronicsAgentVisualizerModal } from './components/ElectronicsAgentVisualizerModal';
 import { PriceAlertManager } from './agent/priceAlertManager';
 import { ShoppingOrchestrator } from './agent/orchestrator';
 import { VERIFIED_CATALOG } from './data/catalog';
@@ -111,9 +112,12 @@ export default function App() {
   const [isSetAlertModalOpen, setIsSetAlertModalOpen] = useState<boolean>(false);
   const [activeTriggeredToast, setActiveTriggeredToast] = useState<PriceAlert | null>(null);
 
-  // Garment & Fabric Agent Inspector State
+  // Garment & Fabric Agent Inspector State (clothing)
   const [inspectTargetProduct, setInspectTargetProduct] = useState<Product | null>(null);
   const [isInspectModalOpen, setIsInspectModalOpen] = useState<boolean>(false);
+
+  // Electronics Agent Gadget Scanner State
+  const [isElectronicsInspectOpen, setIsElectronicsInspectOpen] = useState<boolean>(false);
 
   // Sync URL changes
   useEffect(() => {
@@ -576,7 +580,13 @@ export default function App() {
               onFeedbackItem={handleFeedbackItem}
               onInspectProduct={(product) => {
                 setInspectTargetProduct(product);
-                setIsInspectModalOpen(true);
+                if (product.category === 'electronics') {
+                  setIsElectronicsInspectOpen(true);
+                  setIsInspectModalOpen(false);
+                } else {
+                  setIsInspectModalOpen(true);
+                  setIsElectronicsInspectOpen(false);
+                }
               }}
               requirements={currentPlan.requirements}
               onOpenAlertsCenter={() => setIsAlertsDrawerOpen(true)}
@@ -693,12 +703,27 @@ export default function App() {
         }}
       />
 
-      {/* AI Garment & Fabric Agent Visualizer Modal */}
+      {/* AI Garment & Fabric Agent Visualizer Modal (clothing) */}
       <ClothAgentVisualizerModal
         product={inspectTargetProduct}
         isOpen={isInspectModalOpen}
         onClose={() => {
           setIsInspectModalOpen(false);
+          setInspectTargetProduct(null);
+        }}
+        onSetAlert={(product) => {
+          setAlertTargetProduct(product);
+          setIsSetAlertModalOpen(true);
+        }}
+        onSwapItem={handleSwapItem}
+      />
+
+      {/* AI Gadget Scanner & Spec Analysis Modal (electronics) */}
+      <ElectronicsAgentVisualizerModal
+        product={inspectTargetProduct}
+        isOpen={isElectronicsInspectOpen}
+        onClose={() => {
+          setIsElectronicsInspectOpen(false);
           setInspectTargetProduct(null);
         }}
         onSetAlert={(product) => {

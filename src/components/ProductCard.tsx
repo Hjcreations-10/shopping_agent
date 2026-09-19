@@ -153,8 +153,16 @@ export const ProductCard: React.FC<ProductCardProps> = ({
         <div className="flex space-x-3 mb-3">
           <div
             onClick={() => onInspectProduct && onInspectProduct(product)}
-            className="relative w-20 h-20 rounded-xl overflow-hidden bg-stone-900 flex-shrink-0 border border-stone-200 group/img cursor-pointer shadow-inner"
-            title={product.category === 'clothing' ? 'Click to scan cloth fabric, fit & outfit synergy' : 'Click to inspect product telemetry'}
+            className={`relative w-20 h-20 rounded-xl overflow-hidden bg-stone-900 flex-shrink-0 border group/img cursor-pointer shadow-inner transition-all ${
+              product.category === 'electronics'
+                ? 'border-slate-700 hover:border-cyan-500/60 hover:shadow-[0_0_12px_rgba(6,182,212,0.3)]'
+                : 'border-stone-200 hover:border-emerald-400/60'
+            }`}
+            title={product.category === 'clothing'
+              ? 'Click to scan cloth fabric, fit & outfit synergy'
+              : product.category === 'electronics'
+              ? 'Click to open AI Gadget Scanner & Spec Analysis'
+              : 'Click to inspect product telemetry'}
           >
             <img
               src={product.imageUrl}
@@ -169,15 +177,29 @@ export const ProductCard: React.FC<ProductCardProps> = ({
             {/* Hover Overlay with Agent Scan Badge */}
             <div className="absolute inset-0 bg-stone-950/40 opacity-0 group-hover/img:opacity-100 transition-opacity flex flex-col items-center justify-center p-1 text-center">
               <Scan className="w-5 h-5 text-emerald-400 animate-pulse mb-0.5" />
-              <span className="text-[9px] font-bold text-white bg-emerald-700/90 px-1.5 py-0.5 rounded-full tracking-tight">
-                {product.category === 'clothing' ? 'Cloth Scan' : 'Inspect'}
+              <span className={`text-[9px] font-bold text-white px-1.5 py-0.5 rounded-full tracking-tight ${
+                product.category === 'electronics'
+                  ? 'bg-cyan-600/90'
+                  : 'bg-emerald-700/90'
+              }`}>
+                {product.category === 'clothing'
+                  ? 'Cloth Scan'
+                  : product.category === 'electronics'
+                  ? 'Gadget Scan'
+                  : 'Inspect'}
               </span>
             </div>
 
-            {/* Corner radar ping indicator for clothing */}
-            {product.category === 'clothing' && (
-              <div className="absolute top-1 left-1 flex items-center gap-0.5 px-1 py-0.2 rounded bg-stone-900/80 text-[8px] font-mono text-emerald-400 border border-emerald-500/40">
-                <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-ping" />
+            {/* Corner radar ping indicator for clothing and electronics */}
+            {(product.category === 'clothing' || product.category === 'electronics') && (
+              <div className={`absolute top-1 left-1 flex items-center gap-0.5 px-1 py-0.5 rounded text-[8px] font-mono border ${
+                product.category === 'electronics'
+                  ? 'bg-slate-900/80 text-cyan-400 border-cyan-500/40'
+                  : 'bg-stone-900/80 text-emerald-400 border-emerald-500/40'
+              }`}>
+                <span className={`w-1.5 h-1.5 rounded-full animate-ping ${
+                  product.category === 'electronics' ? 'bg-cyan-400' : 'bg-emerald-400'
+                }`} />
                 <span>AI</span>
               </div>
             )}

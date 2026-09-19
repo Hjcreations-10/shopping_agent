@@ -270,3 +270,30 @@ export interface PriceAlert {
   priceHistory: PriceHistoryPoint[];
   emailNotification?: string;
 }
+
+export interface AgentMessage {
+  id: string;
+  role: 'user' | 'agent';
+  content: string;
+  timestamp: string;
+  thought?: string;
+  toolUsed?: string;
+  suggestedAction?: {
+    type: 'replan' | 'swap' | 'adjust_budget' | 'apply_diet' | 'custom';
+    label: string;
+    payload?: any;
+  };
+}
+
+export interface AgentChatResponse {
+  reply: string;
+  thought?: string;
+  toolUsed?: string;
+  suggestedAction?: {
+    type: 'replan' | 'swap' | 'adjust_budget' | 'apply_diet' | 'custom';
+    label: string;
+    payload?: any;
+  };
+  modelUsed?: string;
+}
+

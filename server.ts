@@ -46,13 +46,14 @@ async function startServer() {
   app.post(['/api/agent/plan', '/api/plan'], async (req: Request, res: Response) => {
     try {
       const { goal, query, sessionId } = req.body;
+      const apiKey = (req.headers['x-gemini-api-key'] as string) || req.body.geminiApiKey || req.body.apiKey;
       const userPrompt = goal || query;
       if (!userPrompt || typeof userPrompt !== 'string') {
         res.status(400).json({ error: 'Valid "goal" or "query" string is required.' });
         return;
       }
 
-      const plan = await ShoppingOrchestrator.executePlan(userPrompt, sessionId);
+      const plan = await ShoppingOrchestrator.executePlan(userPrompt, sessionId, apiKey);
       res.json(plan);
     } catch (err: any) {
       console.error('Error in /api/agent/plan:', err);
@@ -64,6 +65,7 @@ async function startServer() {
   app.post('/api/agent/replan', async (req: Request, res: Response) => {
     try {
       let { previousState, followUpQuery, sessionId } = req.body;
+      const apiKey = (req.headers['x-gemini-api-key'] as string) || req.body.geminiApiKey || req.body.apiKey;
 
       if (!followUpQuery || typeof followUpQuery !== 'string') {
         res.status(400).json({ error: 'Valid "followUpQuery" string is required.' });
@@ -82,11 +84,54 @@ async function startServer() {
         return;
       }
 
-      const replanned = await ShoppingOrchestrator.replan(previousState, followUpQuery);
+      const replanned = await ShoppingOrchestrator.replan(previousState, followUpQuery, apiKey);
       res.json(replanned);
     } catch (err: any) {
       console.error('Error in /api/agent/replan:', err);
       res.status(500).json({ error: err?.message || 'Re-planning failed' });
+    }
+  });
+
+  // 3c. Free-Form Agent Chat & Co-Pilot Consultation
+  app.post('/api/agent/chat', async (req: Request, res: Response) => {
+    try {
+      const { message, previousState, sessionId } = req.body;
+      const apiKey = (req.headers['x-gemini-api-key'] as string) || req.body.geminiApiKey || req.body.apiKey;
+
+      if (!message || typeof message !== 'string') {
+        res.status(400).json({ error: 'Valid "message" string is required.' });
+        return;
+      }
+
+      let state = previousState;
+      if (!state && sessionId) {
+        state = SessionStore.getLatestPlan(sessionId);
+      }
+
+      const response = await ShoppingOrchestrator.chatWithAgent(message, state, apiKey);
+      res.json(response);
+    } catch (err: any) {
+      console.error('Error in /api/agent/chat:', err);
+      res.status(500).json({ error: err?.message || 'Chat consultation failed' });
+    }
+  });
+
+  // 3d. Test Gemini API Key Connectivity
+  app.post('/api/agent/test-key', async (req: Request, res: Response) => {
+    try {
+      const { apiKey } = req.body;
+      const keyToTest = apiKey || (req.headers['x-gemini-api-key'] as string) || process.env.GEMINI_API_KEY;
+
+      if (!keyToTest) {
+        res.status(400).json({ error: 'No API key provided to test.' });
+        return;
+      }
+
+      const testResult = await ShoppingOrchestrator.testApiKey(keyToTest);
+      res.json(testResult);
+    } catch (err: any) {
+      console.error('Error in /api/agent/test-key:', err);
+      res.status(400).json({ ok: false, error: err?.message || 'API Key validation failed' });
     }
   });
 

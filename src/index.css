@@ -143,3 +143,196 @@
 .custom-scrollbar::-webkit-scrollbar-thumb:hover {
   background: #a8a29e;
 }
+
+/* Agent Avatar & Soundwave Keyframes */
+@keyframes soundwave {
+  0%, 100% {
+    height: 4px;
+  }
+  50% {
+    height: 18px;
+  }
+}
+
+@keyframes orbSwirl {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes radarPing {
+  0% {
+    transform: scale(0.95);
+    opacity: 0.8;
+  }
+  100% {
+    transform: scale(2.2);
+    opacity: 0;
+  }
+}
+
+@keyframes auroraFlow {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
+/* Agent Glows & Visual Accents */
+.ui-glow-emerald-lg {
+  box-shadow: 0 0 35px -5px rgba(16, 185, 129, 0.4), 0 0 15px -2px rgba(16, 185, 129, 0.2);
+}
+
+.ui-glow-indigo {
+  box-shadow: 0 0 25px -4px rgba(99, 102, 241, 0.35);
+}
+
+.ui-glow-cyan {
+  box-shadow: 0 0 25px -4px rgba(6, 182, 212, 0.35);
+}
+
+.ui-aurora-border {
+  background: linear-gradient(90deg, #10b981, #06b6d4, #6366f1, #10b981);
+  background-size: 300% 300%;
+  animation: auroraFlow 4s ease infinite;
+}
+
+.ui-soundwave-bar {
+  animation: soundwave 1s ease-in-out infinite;
+}
+
+.ui-soundwave-bar:nth-child(1) { animation-delay: 0.1s; }
+.ui-soundwave-bar:nth-child(2) { animation-delay: 0.25s; }
+.ui-soundwave-bar:nth-child(3) { animation-delay: 0.4s; }
+.ui-soundwave-bar:nth-child(4) { animation-delay: 0.15s; }
+.ui-soundwave-bar:nth-child(5) { animation-delay: 0.35s; }
+
+/* ============================================================
+   Electronics & Enhanced Cloth Agent — Extended Animations
+   ============================================================ */
+
+/* Particle float & fade for laser sparkle trail */
+@keyframes particleFade {
+  0% { opacity: 1; transform: translate(0, 0) scale(1); }
+  100% { opacity: 0; transform: translate(var(--tx, 8px), var(--ty, -16px)) scale(0.3); }
+}
+
+/* Radar spinner */
+@keyframes radarSpin {
+  from { transform: rotate(0deg); }
+  to   { transform: rotate(360deg); }
+}
+
+/* Radar sweep (conic gradient rotating) */
+@keyframes radarSweep {
+  from { transform: rotate(0deg); }
+  to   { transform: rotate(360deg); }
+}
+
+/* Spec benchmark bar fill-in */
+@keyframes specBarFill {
+  from { width: 0%; }
+  to   { width: var(--target-w, 80%); }
+}
+
+/* Neon flicker for live-scan labels */
+@keyframes neonFlicker {
+  0%, 100% { opacity: 1; }
+  92%       { opacity: 1; }
+  93%       { opacity: 0.4; }
+  94%       { opacity: 1; }
+  96%       { opacity: 0.6; }
+  97%       { opacity: 1; }
+}
+
+/* Style score arc draw */
+@keyframes arcDraw {
+  from { stroke-dashoffset: 251; }
+  to   { stroke-dashoffset: var(--arc-offset, 50); }
+}
+
+/* Stagger reveal for swatches */
+@keyframes swatchReveal {
+  from { opacity: 0; transform: scale(0.5) rotate(-10deg); }
+  to   { opacity: 1; transform: scale(1) rotate(0deg); }
+}
+
+/* Size guide body silhouette pulse */
+@keyframes silhouettePulse {
+  0%, 100% { opacity: 0.55; }
+  50%       { opacity: 0.85; }
+}
+
+/* Holographic scan grid shimmer */
+@keyframes holoGrid {
+  0%   { background-position: 0 0; }
+  100% { background-position: 32px 32px; }
+}
+
+/* ---- Electronics & Cloth Agent Utility Classes ---- */
+
+.ui-neon-cyan {
+  box-shadow: 0 0 20px -3px rgba(6, 182, 212, 0.45), 0 0 8px -2px rgba(6, 182, 212, 0.25);
+}
+
+.ui-neon-blue {
+  box-shadow: 0 0 22px -4px rgba(59, 130, 246, 0.4), 0 0 10px -2px rgba(99, 102, 241, 0.2);
+}
+
+.ui-radar-ring {
+  animation: radarPing 1.8s cubic-bezier(0, 0, 0.2, 1) infinite;
+}
+
+.ui-particle {
+  animation: particleFade 1.2s ease-out forwards;
+}
+
+.ui-spec-bar {
+  animation: specBarFill 1.1s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+.ui-neon-flicker {
+  animation: neonFlicker 4s ease-in-out infinite;
+}
+
+.ui-arc-draw {
+  animation: arcDraw 1.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  stroke-dasharray: 251;
+}
+
+.ui-swatch-reveal {
+  animation: swatchReveal 0.45s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+.ui-silhouette-pulse {
+  animation: silhouettePulse 2.6s ease-in-out infinite;
+}
+
+.ui-holo-grid {
+  background-image:
+    linear-gradient(rgba(6, 182, 212, 0.07) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(6, 182, 212, 0.07) 1px, transparent 1px);
+  background-size: 32px 32px;
+  animation: holoGrid 3s linear infinite;
+}
+
+.ui-radar-sweep {
+  animation: radarSweep 2.5s linear infinite;
+  transform-origin: center;
+}
+
+.ui-trust-glow {
+  box-shadow:
+    0 0 0 3px rgba(6, 182, 212, 0.15),
+    0 0 25px -4px rgba(6, 182, 212, 0.35);
+}
+
+
